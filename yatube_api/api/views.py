@@ -11,15 +11,15 @@ from .serializers import CommentSerializer, PostSerializer, GroupSerializer
 from .serializers import FollowSerialixer
 
 
-class ListCreateViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
-                        viewsets.GenericViewSet):
-    pass
+# class ListCreateViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+#                         viewsets.GenericViewSet):
+#     pass
 
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthorOrReadOnly, ]
+    permission_classes = (IsAuthorOrReadOnly, )
     pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
@@ -29,12 +29,12 @@ class PostViewSet(viewsets.ModelViewSet):
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, ]
+    permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthorOrReadOnly, ]
+    permission_classes = (IsAuthorOrReadOnly, )
 
     def perform_create(self, serializer):
         post_request = get_object_or_404(Post, pk=self.kwargs.get('post_id'))
@@ -45,12 +45,12 @@ class CommentViewSet(viewsets.ModelViewSet):
         return post_request.comments.all()
 
 
-class FollowViewSet(ListCreateViewSet):
+class FollowViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
+                    viewsets.GenericViewSet):
     serializer_class = FollowSerialixer
-    permission_classes = [IsAuthorOrReadOnly, IsAuthenticated]
+    permission_classes = (IsAuthorOrReadOnly, IsAuthenticated)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('following__username', 'user__username',)
-    pagination_class = None
 
     def get_queryset(self):
         return self.request.user.follower.all()
