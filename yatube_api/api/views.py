@@ -11,11 +11,6 @@ from .serializers import CommentSerializer, PostSerializer, GroupSerializer
 from .serializers import FollowSerialixer
 
 
-# class ListCreateViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
-#                         viewsets.GenericViewSet):
-#     pass
-
-
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
