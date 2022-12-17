@@ -7,7 +7,7 @@ git clone https://github.com/y0urchaper0ne/api_final_yatube.git
 ```
 
 ```
-cd kittygram_backend
+cd yatube_api
 ```
 
 Cоздать и активировать виртуальное окружение:
